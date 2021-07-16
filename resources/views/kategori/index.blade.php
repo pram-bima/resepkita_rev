@@ -99,7 +99,7 @@
             </div>
             <div class="modal-footer">
                 <a class="btn btn-secondary btn-sm mb-2" data-dismiss="modal">Close</a>
-				<button type="button" class="btn btn-primary mb-2 btn-sm" onclick="submit()">Kirim</button>
+				<button type="submit" href="javascript:;" class="btn btn-primary mb-2 btn-sm" onclick="sendData()">Kirim</button>
             </div>
         </div>
     </div>
@@ -131,31 +131,32 @@
             },
         });
     }
-    function submit(){
-        var url;
-        var type;
+    function sendData(){
+        var link;
+        var requestType;
         var result;
         if( idEdit != 0 ){
-            url = 'http://127.0.0.1:8000/kategori/'+idEdit;
-            type = 'put';
+            link = 'http://127.0.0.1:8000/kategori/'+idEdit;
+            requestType = 'put';
             enctype = 'multipart/form-data';
         }else{
-            url = 'http://127.0.0.1:8000/kategori';
-            type = 'post';
+            link = 'http://127.0.0.1:8000/kategori';
+            requestType = 'post';
             enctype = 'multipart/form-data';
         }
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            type : type,
-            url : url,
+            url : link,
+            type : requestType,
+            dataType : JSON,
             data : {
                 nama_kategori : $('[name=nama_kategori]').val(),
                 gambar_kategori : $('[name=gambar_kategori]').val(),
                 deskripsi_kategori : $('[name=deskripsi_kategori]').val(),
             },
-            success : function(data){   
+            success : function(data, status, xhr){   
                 idEdit = 0;   
                 $('[name=nama_kategori]').val('');
                 $('[name=gambar_kategori]').val('');
@@ -163,6 +164,9 @@
                 $('#formKategori').modal('hide');
                 getIndex();
             },
+            error: function (jqXHR, textStatus, errorMsg) {
+				alert('Error : ' + errorMsg);
+			}
         });
     }
     function editKategori(id){        

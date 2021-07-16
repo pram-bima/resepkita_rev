@@ -49,8 +49,6 @@ class KategorisController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        //
         $request->validate([
             'nama_kategori' => 'required',
             'gambar_kategori' => 'required|mimes:jpeg,png,jpg|max:2048',
@@ -63,11 +61,11 @@ class KategorisController extends Controller
         ]);
 
         if ($request->gambar_kategori) {
-            $destinationPath = 'gambar/'; // upload path
+            $destinationPath = 'gambar_kategori'; // upload path
             $imageName = date('YmdHis') . "." . $files->getClientOriginalExtension();
             $files->move($destinationPath, $imageName);
             $save = $request->all();
-            $save['title'] = "$imageName";
+            $save['gambar_kategori'] = "$imageName";
         }
 
         $result = Kategori::insertGetId($save);
